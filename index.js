@@ -70,12 +70,14 @@ GCSAdapter.prototype.createFile = function(filename, data, contentType) {
     // gcloud supports upload(file) not upload(bytes), so we need to stream.
     var uploadStream = file.createWriteStream(params);
     uploadStream.on('error', (err) => {
+      console.error(JSON.stringify(err))
       return reject(err);
     }).on('finish', () => {
       // Second call to set public read ACL after object is uploaded.
       if (this._directAccess) {
         file.makePublic((err, res) => {
           if (err !== null) {
+            console.error(JSON.stringify(err))
             return reject(err);
           }
           resolve();
